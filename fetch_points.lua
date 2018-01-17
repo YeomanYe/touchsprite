@@ -3,8 +3,8 @@ w,h = getScreenSize();
 MyJsonString = [[
 {
   "style": "default",
-  "width": ]]..(w/2)..[[,
-  "height": ]]..(h/4)..[[,
+  "width": ]]..(w*3/4)..[[,
+  "height": ]]..(h*2/3)..[[,
   "views": [
     {
       "type": "Label",
@@ -20,22 +20,32 @@ MyJsonString = [[
       "size": 15,
       "align": "left",
       "color": "255,0,0"
+    },
+  {
+      "type": "CheckBoxGroup",
+      "list": "设备类型,内存信息,系统版本号,设备系统,设备进程列表,设备名称,设备IP,设备品牌,设备型号,CPU型号,UUID,DPI&像素密度",
+      "select": "3@5"
     }
   ]
 }
 ]]
-ret,input1 = showUI(MyJsonString);
+ret,input1,input2 = showUI(MyJsonString);
+-- 显示提示框
 function showTips(msg)
     toast(msg,1)
     mSleep(100);
 end
-
-showTips("取点数为:"..input1.."个");
-
-local touchCount = tonumber(input1);
-local ret = catchTouchPoint(touchCount);
-local str = "";
-for i = 1, #ret do  
+-- 取点处理函数
+function fetchPoints(input)
+  if input == nil then return end
+  showTips("取点数为:"..input.."个");
+  local touchCount = tonumber(input);
+  local ret = catchTouchPoint(touchCount);
+  local str = "";
+  for i = 1, #ret do  
     str = str.."第"..i.."次点击的位置:x="..ret[i].x..",y="..ret[i].y.."\n";
+  end
+  dialog(str);
 end
-dialog(str);
+showTips(input2);
+fetchPoints(input1);
